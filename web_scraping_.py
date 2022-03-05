@@ -1,9 +1,29 @@
-from re import search
-from markupsafe import string
+
+import imp
+from bs4 import BeautifulSoup
 import requests 
-import bs4
+import bs4 
 #==========================================================
-#                       MAIN
+#                       Goodreads
+#==========================================================
+
+
+def goodreads(artist) :
+
+    url = requests.get("https://www.goodreads.com/search?q="+ artist + "&qid=")
+
+    data_a = BeautifulSoup(url.text , 'html.parser')
+
+    data_b = data_a.find('div' , attrs={'div' , 'leftContainer'})
+
+    data_c = data_b.find_all('a' , attrs={'class' : 'bookTitle'})
+
+    for i in data_c :
+         print("Book name : " + i.text)
+     
+
+#==========================================================
+#                       wikipedia
 #==========================================================
 
 
@@ -25,9 +45,9 @@ for name in names :
         print("Writer name : " + name.string)
         ListOfWriters.append(name.string)
 
-search = input("Enter the name of the writer you want : ")
-
-if search in ListOfWriters :
-    print("It's available ! ")
+artist = input("Enter your choice : ")
+if artist not in ListOfWriters :
+    print("Wrong name ! ")
 else :
-    print("It's not available ! ")
+    goodreads(artist)
+    
